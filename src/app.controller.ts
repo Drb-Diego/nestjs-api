@@ -1,12 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ICreateUserBody } from './@types';
+import AppModel from './app.model';
 
-@Controller()
+@Controller('users')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private appModel: AppModel) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post('create')
+  async createUser(@Body() body: ICreateUserBody) {
+    const { name, userFunction } = body;
+
+    const userCreated = await this.appModel.create({ name, userFunction });
+
+    return userCreated;
   }
 }
